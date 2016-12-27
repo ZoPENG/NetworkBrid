@@ -1,0 +1,397 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.network.bird</groupId>
+  <artifactId>networkbird</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>networkbird Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <file.encoding>UTF-8</file.encoding>
+
+    <spring.version>4.2.5.RELEASE</spring.version>
+    <dom4j.version>2.0.0</dom4j.version>
+    <lucee.version>1.4.1</lucee.version>
+    <aspectj.version>1.8.9</aspectj.version>
+    <mysql.connector.java.version>6.0.2</mysql.connector.java.version>
+    <hibernate.version>5.1.0.Final</hibernate.version>
+    <commons.collections.version>3.2.1</commons.collections.version>
+    <javassist.version>3.20.0-GA</javassist.version>
+    <ehcache.version>2.10.2</ehcache.version>
+    <cglib.nodep.version>3.2.2</cglib.nodep.version>
+    <commons.io.version>1.3.2</commons.io.version>
+    <commons.fileupload.version>1.3.1</commons.fileupload.version>
+    <slf4j.version>1.7.21</slf4j.version>
+    <logback.version>1.1.7</logback.version>
+    <logback.ext.spring.version>0.1.4</logback.ext.spring.version>
+    <jackson.version>2.7.3</jackson.version>
+    <junit.version>4.12</junit.version>
+    <h2.version>1.4.191</h2.version>
+    <httpclient.version>4.5.2</httpclient.version>
+    <camel.jsonpath>2.17.0</camel.jsonpath>
+    <reactor.version>2.0.7.RELEASE</reactor.version>
+    <javaee.version>7.0</javaee.version>
+    <jstl.version>1.2</jstl.version>
+  </properties>
+
+
+  <dependencies>
+    <!-- 解析xml文件 -->
+    <dependency>
+      <groupId>org.dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>${dom4j.version}</version>
+    </dependency>
+    <!-- java xml api -->
+    <dependency>
+      <groupId>org.lucee</groupId>
+      <artifactId>xml-apis</artifactId>
+      <version>${lucee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-websocket</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!-- 事务相关 -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-oxm</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!-- spring aop相关 -->
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>${aspectj.version}</version>
+    </dependency>
+    <!-- jdbc驱动 -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql.connector.java.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>${hibernate.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>dom4j</groupId>
+          <artifactId>dom4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <version>${hibernate.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>dom4j</artifactId>
+          <groupId>dom4j</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- 提供一个类包来扩展和增加标准的 Java Collection框架 -->
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>${commons.collections.version}</version>
+    </dependency>
+    <!-- 一个开源的分析、编辑和创建Java字节码的类库 -->
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>${javassist.version}</version>
+    </dependency>
+    <!-- 一个缓存框架 -->
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+      <version>${ehcache.version}</version>
+    </dependency>
+    <!-- cglib代理 实现AOP的一种方式 ； 和它对应的是DynaProxy(java动态代理) -->
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>${cglib.nodep.version}</version>
+    </dependency>
+    <!-- 上传文件时需要 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons.io.version}</version>
+    </dependency>
+    <!-- 上传文件时需要 -->
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>${commons.fileupload.version}</version>
+    </dependency>
+    <!-- slf4j(Simple Logging Facade for Java)是一个用于日志系统的简单Facade，允许最终用户在部署其应用时使用其所希望的日志系统 -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <!-- 日志框架 -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>${logback.version}</version>
+    </dependency>
+    <!-- 日志框架 -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
+    </dependency>
+    <!-- 日志框架 -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-access</artifactId>
+      <version>${logback.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.logback-extensions</groupId>
+      <artifactId>logback-ext-spring</artifactId>
+      <version>${logback.ext.spring.version}</version>
+    </dependency>
+    <!-- jackson可以将java类转换为json,也能将json转换为xml -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <!-- 单元测试框架  -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- 一个嵌入式数据库 -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>${h2.version}</version>
+    </dependency>
+    <!-- 一个http客户端，方便编写http相关的功能 -->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>${httpclient.version}</version>
+    </dependency>
+    <!-- 可以像XPath解析XML一样解析JSON -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-jsonpath</artifactId>
+      <version>${camel.jsonpath}</version>
+    </dependency>
+    <!-- 一个事件驱动框架 -->
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-core</artifactId>
+      <version>${reactor.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor.spring</groupId>
+      <artifactId>reactor-spring-webmvc</artifactId>
+      <version>${reactor.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor.spring</groupId>
+      <artifactId>reactor-spring-core</artifactId>
+      <version>${reactor.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>${javaee.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>${jstl.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- 提供操作office文档的能力-->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>3.14</version>
+    </dependency>
+    <!-- poi组件，用于支持doc等格式-->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-scratchpad</artifactId>
+      <version>3.14</version>
+    </dependency>
+    <!-- poi组件，用于支持docx等格式-->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>3.14</version>
+    </dependency>
+    <!-- poi组件，用于支持docx等转换为html格式-->
+    <dependency>
+      <groupId>fr.opensagres.xdocreport</groupId>
+      <artifactId>xdocreport</artifactId>
+      <version>1.0.6</version>
+    </dependency>
+    <!-- poi组件，用于支持docx等转换为html格式-->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml-schemas</artifactId>
+      <version>3.14</version>
+    </dependency>
+    <!-- poi组件，用于支持docx等转换为html格式-->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>ooxml-schemas</artifactId>
+      <version>1.3</version>
+    </dependency>
+    <!-- JACOB是一个Java-COM中间件.通过这个组件可以在Java应用程序中调用COM组件和Win32程序库，需要从doc目录复制dll到classpath-->
+    <dependency>
+      <groupId>com.hynnet</groupId>
+      <artifactId>jacob</artifactId>
+      <version>1.18</version>
+    </dependency>
+    <!-- 利用OpenOffice将Office文档转换为其它格式-->
+    <dependency>
+      <groupId>com.artofsolving</groupId>
+      <artifactId>jodconverter</artifactId>
+      <version>2.2.1</version>
+    </dependency>
+    <!-- 检测文件编码相关，中央仓库没有这个jar，需要手动从doc目录复制到maven仓库中-->
+    <dependency>
+      <groupId>cpdetector</groupId>
+      <artifactId>cpdetector</artifactId>
+      <version>1.0.10</version>
+    </dependency>
+    <!-- 检测文件编码相关，中央仓库没有这个jar，需要手动从doc目录复制到maven仓库中-->
+    <dependency>
+      <groupId>chardet</groupId>
+      <artifactId>chardet</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <!-- 检测文件编码相关，中央仓库没有这个jar，需要手动从doc目录复制到maven仓库中-->
+    <dependency>
+      <groupId>jargs</groupId>
+      <artifactId>jargs</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <!-- 安全框架 -->
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-core</artifactId>
+      <version>1.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-web</artifactId>
+      <version>1.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-spring</artifactId>
+      <version>1.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-ehcache</artifactId>
+      <version>1.3.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>net.sf.ehcache</groupId>
+          <artifactId>ehcache-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- java.lang包的扩展，提供了很多方便的工具类-->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.5</version>
+    </dependency>
+    <!-- 阿里巴巴的一个数据库连接池-->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+      <version>1.0.26</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>networkbird</finalName>
+  </build>
+</project>

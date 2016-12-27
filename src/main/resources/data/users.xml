@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 本文档设置系统默认用户的默认密码和邮箱 -->
+<root>
+    <!-- 这一级的标签名称应该和studio.xiaoyun.core.constant.SystemUser定义的相同-->
+    <admin>
+        <password>1</password>
+        <email>admin@test.com</email>
+    </admin>
+    <user>
+        <password>1</password>
+        <email>user@test.com</email>
+    </user>
+    <public>
+        <password>1</password>
+        <email>public@test.com</email>
+    </public>
+</root>
