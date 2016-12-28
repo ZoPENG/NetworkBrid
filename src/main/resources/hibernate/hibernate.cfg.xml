@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<hibernate-configuration>
+	<session-factory>
+		<!-- session管理 -->
+		<property name="current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</property>
+		<!-- 字符集设置 -->
+		<property name="connection.characterEncoding">utf-8</property>
+		<!-- 是否使用unicode编码 -->
+		<property name="connection.useUnicode">true</property>
+		<!-- 外关联时的最大深度 -->
+		<property name="hibernate.max_fetch_depth">3</property>
+		<!-- 累积一定数据的操作后批量发到数据库执行 -->
+		<property name="hibernate.jdbc.batch_size">30</property>
+		<!-- 是否开启二级缓存 -->
+		<property name="hibernate.cache.use_second_level_cache">false</property>
+	</session-factory>
+</hibernate-configuration>

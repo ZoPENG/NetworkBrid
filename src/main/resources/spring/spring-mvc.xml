@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+            http://www.springframework.org/schema/context   
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+            http://www.springframework.org/schema/mvc  
+            http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+    <!-- 注解驱动 -->
+    <mvc:annotation-driven/>
+
+    <!-- 开启动态代理，spring默认会自动在jdk代理和cglib中选择 -->
+    <aop:aspectj-autoproxy/>
+
+    <!-- 定义控制器所在的包 -->
+    <context:component-scan base-package="studio.xiaoyun.web.controller"/>
+
+    <!-- 自定义拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/v1/**"/>
+            <bean class="studio.xiaoyun.web.interceptor.WebInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 通过web访问时，拦截所有未捕获的异常 -->
+    <bean class="studio.xiaoyun.web.interceptor.WebExceptionInterceptor"/>
+
+    <!-- 配置js，css等静态文件直接映射到对应的文件夹，不被DispatcherServlet处理 ,location是WebRoot中的文件目录，location是url前缀 -->
+    <mvc:resources location="/img/logo/favicon.ico" mapping="/favicon.ico"/>
+    <mvc:resources location="/img/" mapping="/img/**"/>
+    <mvc:resources location="/js/" mapping="/js/**"/>
+    <mvc:resources location="/css/" mapping="/css/**"/>
+    <mvc:resources location="/plugins/" mapping="/plugins/**"/>
+    <mvc:resources location="/file/" mapping="/file/**"/>
+
+    <!-- 根据请求的媒体类型自动选择资源表述方式 -->
+    <bean
+            class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="order" value="0"/>
+        <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+        <property name="viewResolvers">
+            <list>
+                <ref bean="jspViewResolver"/>
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <ref bean="jsonView"/>
+                <ref bean="xmlView"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json"/>
+                <entry key="xml" value="application/xml"/>
+                <entry key="html" value="text/html"/>
+            </map>
+        </property>
+        <property name="defaultContentType" value="text/html"/>
+        <property name="ignoreAcceptHeader" value="false"/>
+        <property name="favorPathExtension" value="true"/>
+        <property name="favorParameter" value="true"/>
+        <property name="parameterName" value="format"/>
+        <property name="ignoreUnknownPathExtensions" value="true"/>
+    </bean>
+
+    <!-- jsp页面解析器，当Controller返回XXX字符串时，先通过拦截器，然后该类就会在/WEB-INF/view/目录下，查找XXX.jsp文件 -->
+    <bean id="jspViewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="order" value="1"/>
+    </bean>
+
+    <bean id="jsonView"
+          class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+        <property name="extractValueFromSingleKeyModel" value="true"/>
+        <property name="contentType" value="application/json;charset=UTF-8"/>
+    </bean>
+
+    <bean id="xmlView"
+          class="org.springframework.web.servlet.view.xml.MarshallingView">
+        <constructor-arg>
+            <bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+                <property name="classesToBeBound">
+                    <array>
+                        <value>studio.xiaoyun.web.HttpResponse</value>
+                    </array>
+                </property>
+            </bean>
+        </constructor-arg>
+        <property name="contentType" value="application/xml;charset=UTF-8"/>
+    </bean>
+
+    <!-- 上传文件bean -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <!-- 单位是字节 -->
+        <property name="maxUploadSize" value="10485760000"/>
+        <property name="maxInMemorySize" value="10240"/>
+    </bean>
+
+</beans>

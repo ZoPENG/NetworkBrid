@@ -17,7 +17,5 @@ target/
 .idea/
 logs/
 dependency-reduced-pom.xml
-*.rdb
-db/
 bin
 .svn

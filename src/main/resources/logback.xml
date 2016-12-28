@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- scan:定时检查配置文件是否有更新，scanPeriod:每隔多少时间检查一次，debug:当此属性设置为true时，
+将打印出logback内部日志信息，实时查看logback运行状态 -->
+<configuration scan="true" scanPeriod="600 seconds" debug="false">
+
+    <property resource="global.properties"/>
+    <!-- 应用名，用于区分不同的应用 -->
+    <contextName>network-bird</contextName>
+
+    <!-- 输出日志到控制台 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 过滤器，等级低于某个值的日志将不会输出-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${logLevel}</level>
+        </filter>
+        <encoder>
+            <pattern>%-5level-%contextName-%logger{0}-%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 输出项目内的所有日志，不包括第三方框架-->
+    <appender name="all"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logRoot}/all/all.log</file>
+        <!-- 每天生成一个文件，删除30天以前的文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>all.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <!-- 自动重命名文件及压缩文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>all.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>12</maxIndex>
+        </rollingPolicy>
+        <!-- 当文件大于指定大小时通知rollingPolicy -->
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>100MB</maxFileSize>
+        </triggeringPolicy>
+        <!-- 格式化日志信息 -->
+        <encoder>
+            <pattern>%-5level-%date{yyyy-MM-dd HH:mm:ss}-[%thread]-%logger-%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 将ERROR等级的日志输出到指定文件 -->
+    <appender name="error"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logRoot}/error/error.log</file>
+        <!-- 过滤掉级别低于ERROR的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <!-- 每天生成一个文件，删除10天以前的文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <!-- 自动重命名文件及压缩文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>error.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>12</maxIndex>
+        </rollingPolicy>
+        <!-- 当文件大于指定大小时通知rollingPolicy -->
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>100MB</maxFileSize>
+        </triggeringPolicy>
+        <!-- 格式化日志信息 -->
+        <encoder>
+            <pattern>%-5level-%date{yyyy-MM-dd HH:mm:ss}-[%thread]-%logger-%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 所有日志输出到控制台 -->
+    <logger name="com.network.bird" level="${logLevel}" addtivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="all"/>
+    </logger>
+    <logger name="org.hibernate" level="warn" addtivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+    <logger name="org.jboss" level="warn" addtivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+    <logger name="org.springframework" level="warn" addtivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+    <logger name="com.mchange" level="warn" addtivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+    <logger name="com.alibaba" level="warn" addtivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+    <logger name="druid.sql.DataSource" level="warn" addtivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+    <logger name="druid.sql.Connection" level="warn" addtivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+    <logger name="druid.sql.Statement" level="${logLevel}" addtivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+    <logger name="druid.sql.ResultSet" level="warn" addtivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+
+    <!-- 日志等级，开发环境中应设置为debug,生产环境中应设置为warn或者error -->
+    <!-- 全局的日志输出等级 -->
+    <root level="${logLevel}">
+        <appender-ref ref="${logDefault}"/>
+        <appender-ref ref="console"/>
+    </root>
+</configuration> 

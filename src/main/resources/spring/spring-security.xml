@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd ">
+
+    <!-- beanID要和web.xml中配置的shiro过滤器名称相同 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 根据filterChainDefinitions的配置，当用户无权限时自动跳转到这里-->
+        <property name="loginUrl" value="/index.html" />
+        <property name="successUrl" value="/" />
+        <property name="unauthorizedUrl" value="/" />
+        <property name="filterChainDefinitions">
+            <value>
+                /druid/**=roles[admin]
+                /admin/**=roles[admin]
+            </value>
+        </property>
+    </bean>
+
+    <!-- 安全管理器-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="authRealm"/>
+        <property name="sessionManager" ref="sessionManager"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+
+    <bean id="authRealm" class="studio.xiaoyun.security.auth.AuthRealm">
+        <property name="userDao" ref="userDao" />
+        <property name="roleDao" ref="roleDao" />
+        <property name="permissionDao" ref="permissionDao" />
+        <!-- 比较密码是否相同 -->
+        <property name="credentialsMatcher" ref="credentialsMatcher" />
+        <!-- 缓存权限相关的信息-->
+        <property name="cacheManager" ref="cacheManager" />
+        <property name="cachingEnabled" value="true" />
+        <!-- 保存认证信息的缓存的名称，默认在ehcache.xml中配置-->
+        <property name="authenticationCacheName" value="authentication" />
+        <property name="authenticationCachingEnabled" value="true" />
+        <!-- 保存授权信息的缓存的名称，默认在ehcache.xml中配置-->
+        <property name="authorizationCacheName" value="authorization" />
+        <property name="authorizationCachingEnabled" value="true" />
+    </bean>
+
+    <!-- 管理缓存-->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:config/ehcache.xml" />
+    </bean>
+
+    <!-- 密码服务，实现加密、解密-->
+    <bean id="cipherService" class="studio.xiaoyun.security.crypto.SimpleCipherService"/>
+
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <!-- cookie的名称 -->
+        <property name="name" value="rme"/>
+        <!-- 表示该cookie只在http请求中使用，js无法获得，可以在一定程度上防止XSS攻击-->
+        <property name="httpOnly" value="true"/>
+        <!-- cookie的有效期，单位是秒 -->
+        <property name="maxAge" value="#{1*30*24*60*60}"/>
+    </bean>
+
+    <!-- 保存sessionID的cookie -->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <!-- cookie的名称 -->
+        <property name="name" value="sid"/>
+        <!-- 表示该cookie只在http请求中使用，js无法获得，可以在一定程度上防止XSS攻击-->
+        <property name="httpOnly" value="true"/>
+        <!-- cookie存活时间，单位是秒，-1表示当浏览器关闭时自动删除-->
+        <property name="maxAge" value="-1"/>
+    </bean>
+
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!-- session超时时间，单位是毫秒，默认：30分钟 -->
+        <property name="globalSessionTimeout" value="#{30*60*1000}"/>
+        <property name="deleteInvalidSessions" value="true"/>
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
+        <property name="sessionDAO" ref="sessionDao"/>
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+    </bean>
+
+    <!-- sessionID生成器 -->
+    <bean id="sessionIdGenerator"
+          class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+
+    <!-- 实现session的增、删、改、查-->
+    <bean id="sessionDao" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+        <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
+        <property name="cacheManager" ref="cacheManager" />
+        <!-- 保存session的缓存的名称，默认在ehcache.xml中配置-->
+        <property name="activeSessionsCacheName" value="session" />
+    </bean>
+
+    <!-- 会话验证调度器，定时删除过期的session-->
+    <bean id="sessionValidationScheduler"
+          class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
+        <!-- 间隔时间 -->
+        <property name="interval" value="#{30*60*1000}"/>
+        <property name="sessionManager" ref="sessionManager"/>
+    </bean>
+
+</beans>
