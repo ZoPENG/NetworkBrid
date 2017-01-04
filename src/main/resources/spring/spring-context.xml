@@ -17,73 +17,50 @@
 	<context:property-placeholder location="classpath:global.properties" />
 
 	<!-- 加载其它配置文件 -->
-	<import resource="classpath:config/spring-security.xml"/>
-	<import resource="classpath:config/spring-scheduled.xml"/>
+	<import resource="classpath:spring/spring-security.xml"/>
+	<import resource="classpath:spring/spring-scheduled.xml"/>
 
 	<!-- 将该包下有相关注解的类加载为bean -->
 	<context:component-scan base-package="com.network.bird" />
 
-	<!-- 定义 Autowired 自动注入 bean -->
-	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
-
-	<!-- 数据库连接池 -->
-		<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
 		<property name="driverClassName" value="${db.driverClassName}" />
 		<property name="url" value="${db.url}" />
 		<property name="username" value="${db.user}" />
 		<property name="password" value="${db.password}" />
-		<property name="testWhileIdle" value="false"/>
-		<!-- 最大连接数 -->
+		<property name="testWhileIdle" value="false" />
 		<property name="maxActive" value="${druid.maxActive}" />
-		<!-- 当程序从连接池中获得的连接超过removeAbandonedTimeout未关闭时，是否强制关闭 -->
 		<property name="removeAbandoned" value="true" />
-		<!-- 和removeAbandoned配合使用，表示超时时间-->
 		<property name="removeAbandonedTimeout" value="1800" />
-		<!-- 配置拦截器，wall防sql注入，stat统计使用信息,config支持对密码加密，slf4j记录日志-->
 		<property name="filters" value="${druid.filters}" />
 		<property name="connectionProperties" value="${druid.connectionProperties}" />
 		<property name="proxyFilters">
 			<list>
-				<ref bean="druidLogFilter"/>
+				<ref bean="druidLogFilter" />
 			</list>
 		</property>
 	</bean>
 
-	<!-- druid的日志过滤器-->
 	<bean id="druidLogFilter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
-		<!-- 是否输出sql信息，sql中包含占位符的也可以输出-->
-		<property name="statementLogEnabled" value="${druid.statementLogEnabled}" />
+		<property name="statementLogEnabled" value="${druid.statementLogEnabled}"/>
 	</bean>
 
-	<!-- 配置SessionFactory -->
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<!-- 指定实体类所在的包 -->
 		<property name="packagesToScan">
 			<list>
 				<value>com.network.bird.core.entity</value>
 			</list>
 		</property>
-		<!-- hibernate配置 -->
 		<property name="hibernateProperties">
 			<props>
-				<!-- 配置根据实体类反建数据库表的方式,可选项包括： none,create,create-drop,update,validate 
-					none:不使用该功能，在生产环境中使用
-					create:每次加载hibernate时都会删除上一次的生成的表，然后根据你的model类再重新来生成新表
-					create-drop:每次加载hibernate时根据model类生成表，但是sessionFactory一关闭,表就自动删除
-					update:第一次加载hibernate时根据model类会自动建立表的结构，以后加载hibernate时根据model类自动更新表结构
-					validate:每次加载hibernate时，验证创建数据库表结构，只会和数据库中的表进行比较，不会创建新表，但是会插入新值 -->
 				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-				<!-- 是否显示sql语句 -->
 				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-				<!-- 是否对输出的sql语句进行格式化 -->
 				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
-				<!-- 数据库方言 -->
 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
 			</props>
 		</property>
-		<!-- hibernate配置文件位置 -->
+
 		<property name="configLocations">
 			<list>
 				<value>
@@ -92,56 +69,29 @@
 			</list>
 		</property>
 	</bean>
-	
-	<!-- 配置事务管理器 -->
-	<bean id="txManager"
-		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory"/>
+
+	<bean id="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<!-- 注解式事务 -->
 	<tx:annotation-driven transaction-manager="txManager" />
-
-	<!-- 配置事务属性 -->
 	<tx:advice id="txAdvice" transaction-manager="txManager">
-		<!-- 配置事务传播属性 -->
 		<tx:attributes>
-			<tx:method name="create*" propagation="REQUIRED" />
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="set*" propagation="REQUIRED" />
-			<tx:method name="get*" propagation="REQUIRED" read-only="true" />
-			<tx:method name="*" propagation="NOT_SUPPORTED" />
+			<tx:method name="create*" propagation="REQUIRED"/>
+			<tx:method name="save*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="set*" propagation="REQUIRED"/>
+			<tx:method name="get*" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="*" propagation="NOT_SUPPORTED"/>
 		</tx:attributes>
 	</tx:advice>
 
-    <!-- proxy-target-class="true" 可以设置代理方式为cglib，spring默认会自动在jdk代理和cglib中选择 -->
-    <aop:aspectj-autoproxy />
+	<aop:aspectj-autoproxy />
 
-	<!-- 配置AOP -->
 	<aop:config>
-		<!-- 将DAO层的所有实现类设置为一个切面 -->
-		<aop:pointcut id="daoPointcut"
-			expression="execution(* studio.xiaoyun.core.dao.impl.*.*(..))" />
-		<!-- 将业务层的所有实现类加入事务管理器中 -->
-		<aop:advisor pointcut-ref="daoPointcut" advice-ref="txAdvice" />
+		<aop:pointcut id="daoPointcut" expression="execution(* com.network.bird.core.impl)"
 	</aop:config>
-	<!-- 配置AOP -->
-	<aop:config>
-		<!-- 将业务层的所有实现类设置为一个切面 -->
-		<aop:pointcut id="servicePointcut"
-			expression="execution(* studio.xiaoyun.core.service.impl.*.*(..))" />
-		<!-- 将业务层的所有实现类加入事务管理器中 -->
-		<aop:advisor pointcut-ref="servicePointcut" advice-ref="txAdvice" />
-	</aop:config>
-	<!-- 将office转换为html -->
-    <bean id="poiTool" class="studio.xiaoyun.common.tool.POITool">
-       <property name="supportedExtensionsForHtmlConverter">
-         <list>
-           <value>doc</value>
-           <value>docx</value>
-         </list>
-       </property>
-    </bean>
+
+
 </beans>
