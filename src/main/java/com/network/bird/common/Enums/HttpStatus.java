@@ -1,4 +1,4 @@
-package com.network.bird.common.Enums;
+package com.network.bird.common.enums;
 
 /**
  * HTTP状态码
@@ -11,7 +11,17 @@ public enum HttpStatus {
      * 且仍未被拒绝。客户端应当继续发送请求的剩余部分，或者如果请求已经完成，忽略这个响应。
      * 服务器必须在请求完成后向客户端发送一个最终响应。
      */
-    CONTINUE(100);
+    CONTINUE(100),
+    /**
+     * 400 Bad Request/无效的请求。
+     * <p>1、语义有误，当前请求无法被服务器理解。2、请求参数有误。
+     */
+    BAD_REQUEST(400),
+    /**
+     * 500 Internal Server Error/服务器内部错误。
+     * <p>服务器遇到了一个未曾预料的状况，导致了它无法完成对请求的处理。
+     */
+    INTERNAL_SERVER_ERROR(500);
 
     private final int value;
 

@@ -1,4 +1,4 @@
-package com.network.bird.core.constant;
+package com.network.bird.core.enums;
 
 /**
  * 定义所有权限。
@@ -36,7 +36,7 @@ public enum  Permission {
 
     private String description;
     private OperationType type;
-    Permission(OperationType type,String description){
+    Permission(OperationType type, String description){
         this.type = type;
         this.description = description;
     }

@@ -1,7 +1,7 @@
 package com.network.bird.core.entity;
 
-import com.network.bird.core.constant.UserStatus;
-import com.network.bird.core.constant.UserType;
+import com.network.bird.core.enums.UserStatus;
+import com.network.bird.core.enums.UserType;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

@@ -1,4 +1,4 @@
-package com.network.bird.core.constant;
+package com.network.bird.core.enums;
 
 /**
  * 操作类型

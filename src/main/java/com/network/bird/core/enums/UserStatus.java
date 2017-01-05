@@ -1,4 +1,4 @@
-package com.network.bird.core.constant;
+package com.network.bird.core.enums;
 
 /**
  * 用户表中用户的状态

@@ -1,7 +1,7 @@
 package com.network.bird.core.entity;
 
-import com.network.bird.core.constant.OperationType;
-import com.network.bird.core.constant.Permission;
+import com.network.bird.core.enums.OperationType;
+import com.network.bird.core.enums.Permission;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
