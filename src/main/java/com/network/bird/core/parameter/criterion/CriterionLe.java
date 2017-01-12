@@ -1,6 +1,7 @@
 package com.network.bird.core.parameter.criterion;
 
-import studio.xiaoyun.core.parameter.Parameter;
+
+import com.network.bird.core.parameter.Parameter;
 
 import java.util.Collections;
 import java.util.List;

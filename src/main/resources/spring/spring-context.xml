@@ -89,9 +89,19 @@
 
 	<aop:aspectj-autoproxy />
 
+	<!--事务切面注入 * 返回值 * 类名 * 方法名 ..参数-->
 	<aop:config>
-		<aop:pointcut id="daoPointcut" expression="execution(* com.network.bird.core.impl)"
+		<aop:pointcut id="daoPointcut" expression="execution(* com.network.bird.core.dao.impl.*.*(..))" />
+		<aop:advisor pointcut-ref="daoPointcut" advice-ref="txAdvice" />
 	</aop:config>
+	<aop:config>
+		<aop:pointcut id="servicePointcut" expression="execution(* com.network.bird.core.service.impl.*.*(..))" />
+		<aop:advisor pointcut-ref="servicePointcut" advice-ref="txAdvice"/>
+	</aop:config>
+
+	<bean id="poiTool" class="">
+
+	</bean>
 
 
 </beans>

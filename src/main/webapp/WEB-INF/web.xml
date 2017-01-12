@@ -109,7 +109,7 @@
     <!-- error页跳转 -->
     <error-page>
         <error-code>404</error-code>
-        <location>/WEB-INF/view/common/index.jsp</location><!--TODO 暂时-->
+        <location>/src/main/webapp/WEB-INF/view/common/index.jsp</location><!--TODO 暂时-->
     </error-page>
 
     <welcome-file-list>

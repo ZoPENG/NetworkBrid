@@ -50,15 +50,6 @@ public abstract class Parameter implements Serializable {
     private String sortField = "";
 
     /**
-     * 列名
-     */
-    private String propertyName;
-    /**
-     * 列值
-     */
-    private Object value;
-
-    /**
      * 添加返回值中包括的字段。
      * <p>默认返回所有数据，使用该方法可以设置只返回某些字段的数据，没有设置的数据将不会返回
      *
