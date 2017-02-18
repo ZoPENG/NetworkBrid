@@ -3,6 +3,8 @@ package com.network.bird.common.convert;
 import com.network.bird.common.exception.BaseException;
 import com.network.bird.common.utils.FileTool;
 
+import java.util.List;
+
 /**
  * 将其它格式的文件转换为html
  * Created by zhoupeng on 2017/1/7.
@@ -52,4 +54,22 @@ public interface IHtmlConverter {
      * @param targetFileName 目标文件的文件名
      */
     void xlsxToHtml(String sourceFileName, String targetFileName);
+
+    /**
+     *
+     * @return 获得Html转换器支持的文件后缀名,不区分大小写，""表示没有扩展名的文件
+     */
+    List<String> getSupportedExtensionsForHtmlConverter();
+
+    default boolean isSupportedExtensionsForHtmlConverter(String extension){
+        List<String> list = getSupportedExtensionsForHtmlConverter();
+        return list != null && list.stream().anyMatch(item -> item.equalsIgnoreCase(extension));
+    }
+
+    /**
+     *
+     * @param extensions 设置Html转换器支持的文件后缀名,不区分大小写，""表示没有扩展名的文件
+     */
+    void setSupportedExtensionsForHtmlConverter(List<String> extensions);
+
 }

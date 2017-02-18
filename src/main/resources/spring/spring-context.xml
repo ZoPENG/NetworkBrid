@@ -99,8 +99,13 @@
 		<aop:advisor pointcut-ref="servicePointcut" advice-ref="txAdvice"/>
 	</aop:config>
 
-	<bean id="poiTool" class="">
-
+	<bean id="poiTool" class="com.network.bird.common.utils.POITool">
+		<property name="supportedExtensionsForHtmlConverter">
+			<list>
+				<value>doc</value>
+				<value>docx</value>
+			</list>
+		</property>
 	</bean>
 
 
